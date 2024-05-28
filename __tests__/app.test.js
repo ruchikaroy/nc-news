@@ -8,8 +8,11 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const app = require("../app");
 const request = require("supertest");
+const endpoints = require("../endpoints.json");
 
-beforeEach(() => seed({ topicData, articleData, commentData, userData }));
+beforeEach(() =>
+  seed({ topicData, articleData, commentData, userData, endpoints })
+);
 afterAll(() => db.end());
 
 describe("/api/topics", () => {
@@ -37,29 +40,43 @@ describe("/api/topics", () => {
       });
   });
 });
+
 describe("/api", () => {
-  it("status:200 responds with a json representation of all the available endpoints of the api", () => {
+  test("GET status:200 responds with a json representation of all the available endpoints of the api", () => {
     return request(app)
       .get("/api")
       .expect(200)
-      .then(({ body: { endpoints } }) => {
-        expect(endpoints).toEqual(
-          expect.objectContaining({
-            "GET /api": expect.objectContaining({
-              description: expect.any(String),
-            }),
-            "GET /api/topics": expect.objectContaining({
-              description: expect.any(String),
-              queries: expect.any(Array),
-              exampleResponse: expect.any(Object),
-            }),
-            "GET /api/articles": expect.objectContaining({
-              description: expect.any(String),
-              queries: expect.any(Array),
-              exampleResponse: expect.any(Object),
-            }),
-          })
-        );
+      .then(({ body: { endpoints: actualEndpoints } }) => {
+        expect(actualEndpoints).toEqual(endpoints);
+      });
+  });
+});
+
+describe("/api/articles/:article=id", () => {
+  test("GET:200 should respond with article for specified id", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toMatchObject({
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then((response) => {
+        expect(response.status).toBe(404);
+        expect(response.body.msg).toBe("Article with 999 does not exist");
       });
   });
 });
