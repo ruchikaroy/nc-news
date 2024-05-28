@@ -37,3 +37,29 @@ describe("/api/topics", () => {
       });
   });
 });
+describe("/api", () => {
+  it("status:200 responds with a json representation of all the available endpoints of the api", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body: { endpoints } }) => {
+        expect(endpoints).toEqual(
+          expect.objectContaining({
+            "GET /api": expect.objectContaining({
+              description: expect.any(String),
+            }),
+            "GET /api/topics": expect.objectContaining({
+              description: expect.any(String),
+              queries: expect.any(Array),
+              exampleResponse: expect.any(Object),
+            }),
+            "GET /api/articles": expect.objectContaining({
+              description: expect.any(String),
+              queries: expect.any(Array),
+              exampleResponse: expect.any(Object),
+            }),
+          })
+        );
+      });
+  });
+});
