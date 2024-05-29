@@ -110,6 +110,15 @@ describe("/api/articles", () => {
         expect(response.status).toBe(404);
       });
   });
+  test("GET:200 should responds with an array of article objects arranged in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
 });
 describe("/api/articles/:article_id/comments", () => {
   test("GET:200 should respond with an array of comments sorted in descending order", () => {
