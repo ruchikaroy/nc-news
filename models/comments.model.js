@@ -28,3 +28,19 @@ exports.insertComment = (body, username, article_id) => {
     )
     .then(({ rows }) => rows[0]);
 };
+exports.removeByCommentId = (comment_id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE comment_id = $1`, [comment_id])
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({
+          status: 404,
+          msg: `Comment with ${comment_id} does not exist`,
+        });
+      } else {
+        return db.query(`DELETE FROM comments WHERE comment_id = $1`, [
+          comment_id,
+        ]);
+      }
+    });
+};

@@ -5,9 +5,12 @@ const {
   getAllArticles,
   patchByArticleId,
 } = require("./controllers/articles.controller");
-const { getCommentsByArticleId } = require("./controllers/comments.controller");
+const {
+  getCommentsByArticleId,
+  postComment,
+  deleteByCommentId,
+} = require("./controllers/comments.controller");
 const { getAPI } = require("./controllers/get-api.controller");
-const { postComment } = require("./controllers/comments.controller");
 
 const app = express();
 app.use(express.json());
@@ -18,12 +21,19 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postComment);
 app.patch("/api/articles/:article_id", patchByArticleId);
+app.delete("/api/comments/:comment_id", deleteByCommentId);
 app.get("/api", getAPI);
+
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.status(400).send({ msg: "Bad Request" });
+  next(err);
 });
 
 app.use((err, req, res, next) => {

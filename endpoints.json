@@ -90,5 +90,9 @@
         "article_img_url": "https://someimage.png"
       }
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "should delete a comment by the specified comment_id",
+    "example response": {}
   }
 }
