@@ -74,5 +74,21 @@
         "created_at": "2021-05-30T15:59:13.341Z"
       }
     }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "should update the article",
+    "requestBody": {
+      "inc_votes": "number to increment the vote count"
+    },
+    "exampleResponse": {
+      "article": {
+        "title": "something",
+        "topic": "anything",
+        "author": "someone",
+        "created_at": 1594329060000,
+        "votes": 101,
+        "article_img_url": "https://someimage.png"
+      }
+    }
   }
 }
