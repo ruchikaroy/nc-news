@@ -52,7 +52,7 @@ describe("/api", () => {
   });
 });
 
-describe("/api/articles/:article=id", () => {
+describe("/api/articles/:article_id", () => {
   test("GET:200 should respond with article for specified id", () => {
     return request(app)
       .get("/api/articles/1")
@@ -77,6 +77,37 @@ describe("/api/articles/:article=id", () => {
       .then((response) => {
         expect(response.status).toBe(404);
         expect(response.body.msg).toBe("Article with 999 does not exist");
+      });
+  });
+});
+describe("/api/articles", () => {
+  test("GET:200 should responds with an array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(13);
+        expect(articles).toBeInstanceOf(Array);
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+  test("GET api/articles should return 404 for non-existent endpoint", () => {
+    return request(app)
+      .get("/api/bananana")
+      .expect(404)
+      .then((response) => {
+        expect(response.status).toBe(404);
       });
   });
 });
