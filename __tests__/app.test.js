@@ -190,3 +190,34 @@ describe("/api/articles/:article_id/comments", () => {
       .expect(400);
   });
 });
+describe("PATCH /api/articles/:article_id", () => {
+  test("PATCH:200 - increment the votes by votes_count", () => {
+    return request(app)
+      .patch("/api/articles/2")
+      .send({ inc_votes: 10 })
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toMatchObject({
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+        expect(article.votes).toEqual(10);
+      });
+  });
+
+  test("PATCH: 404 - article not found", () => {
+    return request(app)
+      .patch("/api/articles/9999")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article with 9999 not found");
+      });
+  });
+});
