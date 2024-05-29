@@ -6,13 +6,16 @@ const {
 } = require("./controllers/articles.controller");
 const { getCommentsByArticleId } = require("./controllers/comments.controller");
 const { getAPI } = require("./controllers/get-api.controller");
+const { postComment } = require("./controllers/comments.controller");
 
 const app = express();
+app.use(express.json());
 
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticlesById);
 app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+app.post("/api/articles/:article_id/comments", postComment);
 app.get("/api", getAPI);
 
 app.use((err, req, res, next) => {

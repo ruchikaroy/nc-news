@@ -139,3 +139,54 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+describe("/api/articles/:article_id/comments", () => {
+  test("POST:201 inserts a new comment to the db and sends the new comment back to the client", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "I love her",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            body: newComment["body"],
+            article_id: 1,
+            author: newComment["username"],
+            votes: 0,
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test("POST: 400 - returns bad request if missing required fields", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "anything" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Request missing mandatory params");
+      });
+  });
+
+  test("POST: 404 - returns not found if article does not exist", () => {
+    return request(app)
+      .post("/api/articles/9999/comments")
+      .send({ username: "butter_bridge", body: "Great article!" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article with 9999 not found");
+      });
+  });
+
+  test("POST: 400 - returns bad request if invalid article_id is provided", () => {
+    return request(app)
+      .post("/api/articles/not-an-id/comments")
+      .send({ username: "butter_bridge", body: "Great article!" })
+      .expect(400);
+  });
+});
