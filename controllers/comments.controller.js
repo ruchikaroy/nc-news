@@ -5,6 +5,7 @@ const {
 } = require("../models/comments.model");
 const { checkArticleExists } = require("../models/articles.model");
 
+
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
 
@@ -36,6 +37,7 @@ exports.postComment = (req, res, next) => {
     })
     .catch(next);
 };
+
 exports.deleteByCommentId = (req, res, next) => {
   const { comment_id } = req.params;
   removeByCommentId(comment_id)
