@@ -10,6 +10,7 @@ const {
   postComment,
   deleteByCommentId,
 } = require("./controllers/comments.controller");
+const { getAllUsers } = require("./controllers/users.controller");
 const { getAPI } = require("./controllers/get-api.controller");
 
 const app = express();
@@ -19,11 +20,11 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticlesById);
 app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+app.get("/api/users", getAllUsers);
 app.post("/api/articles/:article_id/comments", postComment);
 app.patch("/api/articles/:article_id", patchByArticleId);
 app.delete("/api/comments/:comment_id", deleteByCommentId);
 app.get("/api", getAPI);
-
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
