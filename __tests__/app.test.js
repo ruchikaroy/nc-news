@@ -108,7 +108,9 @@ describe("GET/api/articles", () => {
             created_at: expect.any(String),
             votes: expect.any(Number),
             article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
           });
+          expect(article.comment_count).toBe(11);
         });
     });
     test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
@@ -118,6 +120,15 @@ describe("GET/api/articles", () => {
         .then((response) => {
           expect(response.status).toBe(404);
           expect(response.body.msg).toBe("Article with 999 does not exist");
+        });
+    });
+    test("GET:400 sends an appropriate status and error message when given an invalid id", () => {
+      return request(app)
+        .get("/api/articles/not-an-id")
+        .expect(400)
+        .then((response) => {
+          expect(response.status).toBe(400);
+          expect(response.body.msg).toBe("Bad Request");
         });
     });
   });
@@ -157,8 +168,6 @@ describe("GET/api/articles", () => {
         .expect(200)
         .then(({ body }) => {
           const { articles } = body;
-          console.log("tests", articles);
-
           expect(articles.length).toEqual(1);
           articles.forEach((article) => {
             expect(article.topic).toBe("cats");

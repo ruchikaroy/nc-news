@@ -9,15 +9,9 @@ exports.fetchCommentsByArticleId = (article_id) => {
     sqlQuery += ` WHERE article_id = $1 ORDER BY created_at DESC `;
     queryValues.push(article_id);
   }
-  return db
-    .query(sqlQuery, queryValues)
-    .then(({ rows }) => {
-      return rows;
-    })
-    .catch((err) => {
-      console.error(`Error executing query: ${err.message}`);
-      throw err;
-    });
+  return db.query(sqlQuery, queryValues).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.insertComment = (body, username, article_id) => {
@@ -28,6 +22,7 @@ exports.insertComment = (body, username, article_id) => {
     )
     .then(({ rows }) => rows[0]);
 };
+
 exports.removeByCommentId = (comment_id) => {
   return db
     .query(`SELECT * FROM comments WHERE comment_id = $1`, [comment_id])

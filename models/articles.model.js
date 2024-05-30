@@ -1,17 +1,29 @@
 const db = require("../db/connection");
 
 exports.fetchArticlesById = (id) => {
-  let sqlQuery = `SELECT * FROM articles`;
-
-  const queryValues = [];
-
-  if (id) {
-    sqlQuery += ` WHERE article_id = $1`;
-    queryValues.push(id);
-  }
+  let sqlQuery = `SELECT 
+  articles.article_id,
+  articles.title,
+  articles.topic,
+  articles.author,
+  articles.created_at,
+  articles.votes,
+  articles.article_img_url, 
+  articles.body,
+  CAST(COUNT(comments.article_id) AS INT) AS comment_count
+FROM 
+  articles 
+LEFT JOIN 
+  comments 
+ON 
+  comments.article_id = articles.article_id 
+WHERE 
+  articles.article_id = $1
+GROUP BY 
+  articles.article_id`;
 
   return db
-    .query(sqlQuery, queryValues)
+    .query(sqlQuery, [id])
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({
@@ -23,6 +35,7 @@ exports.fetchArticlesById = (id) => {
     })
     .catch();
 };
+
 exports.fetchAllArticles = (topic) => {
   let queryValues = [];
 
@@ -42,12 +55,10 @@ exports.fetchAllArticles = (topic) => {
     sqlQuery += ` WHERE articles.topic = $1`;
     queryValues.push(topic);
   }
-  console.log(queryValues);
   sqlQuery += ` GROUP BY articles.article_id
   ORDER BY articles.created_at DESC`;
 
   return db.query(sqlQuery, queryValues).then(({ rows }) => {
-    console.log(rows);
     return rows;
   });
 };
