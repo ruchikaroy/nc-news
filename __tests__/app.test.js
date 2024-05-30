@@ -257,3 +257,31 @@ describe("DELETE:/api/comments/:comment_id", () => {
       });
   });
 });
+describe("GET: /api/users", () => {
+  test("200: responds with an array of objects and sends back to the client", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        expect(users).toHaveLength(4);
+        expect(users).toBeInstanceOf(Array);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+  test("GET api/users should return 404 for non-existent endpoint", () => {
+    return request(app)
+      .get("/api/non-existent-api")
+      .expect(404)
+      .then((response) => {
+        expect(response.status).toBe(404);
+        expect(response.body.msg).toBe("Route not found");
+      });
+  });
+});
