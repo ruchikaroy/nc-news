@@ -149,6 +149,33 @@ describe("GET/api/articles", () => {
         });
     });
   });
+
+  describe("GET: /api/articles?topic", () => {
+    test("GET:200 should respond with the data for the specified topic when queried", () => {
+      return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          console.log("tests", articles);
+
+          expect(articles.length).toEqual(1);
+          articles.forEach((article) => {
+            expect(article.topic).toBe("cats");
+          });
+        });
+    });
+    test("GET: 200 should respond with all the articles if no topic is specified", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles.length).toBeGreaterThan(0);
+          expect(articles.length).toBe(13);
+        });
+    });
+  });
 });
 
 describe("POST:/api/articles/:article_id/comments", () => {

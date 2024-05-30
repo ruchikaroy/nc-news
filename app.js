@@ -4,6 +4,7 @@ const {
   getArticlesById,
   getAllArticles,
   patchByArticleId,
+  getArticlesByTopic,
 } = require("./controllers/articles.controller");
 const {
   getCommentsByArticleId,
