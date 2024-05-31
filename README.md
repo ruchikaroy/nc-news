@@ -2,7 +2,7 @@
 
 A CRUD api that lets the users query the database to create, read,update and delete data. All the endpoints have been tested for standard errors.
 
-Here is the link for the hosted version.
+Here is the link for the hosted version (https://news-api-ibvn.onrender.com/api)
 
 ## How can you get this API
 
