@@ -108,9 +108,7 @@ describe("GET/api/articles", () => {
             created_at: expect.any(String),
             votes: expect.any(Number),
             article_img_url: expect.any(String),
-            comment_count: expect.any(Number),
           });
-          expect(article.comment_count).toBe(11);
         });
     });
     test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
@@ -129,6 +127,25 @@ describe("GET/api/articles", () => {
         .then((response) => {
           expect(response.status).toBe(400);
           expect(response.body.msg).toBe("Bad Request");
+        });
+    });
+    test("GET:200 should respond with article for specified id and comment_count key added", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+          const { article } = body;
+          expect(article).toMatchObject({
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+          expect(article.comment_count).toBe(11);
         });
     });
   });
