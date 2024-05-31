@@ -32,15 +32,9 @@ const patchByArticleId = (req, res, next) => {
     })
     .catch(next);
 };
-const getArticlesByTopic = (req, res, next) => {
-  const { topic } = req.params;
-  fetchArticlesByTopic(topic).then((topic) => {
-    res.status(200).send({ topic });
-  });
-};
+
 module.exports = {
   getArticlesById,
   getAllArticles,
   patchByArticleId,
-  getArticlesByTopic,
 };

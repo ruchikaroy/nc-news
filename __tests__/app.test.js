@@ -126,7 +126,7 @@ describe("GET/api/articles", () => {
         .expect(400)
         .then((response) => {
           expect(response.status).toBe(400);
-          expect(response.body.msg).toBe("Bad Request");
+          expect(response.body.msg).toBe("Invalid input");
         });
     });
     test("GET:200 should respond with article for specified id and comment_count key added", () => {
@@ -306,7 +306,7 @@ describe("DELETE:/api/comments/:comment_id", () => {
       .expect(400)
       .then((response) => {
         expect(response.status).toBe(400);
-        expect(response.body.msg).toBe("Bad Request");
+        expect(response.body.msg).toBe("Invalid input");
       });
   });
 });

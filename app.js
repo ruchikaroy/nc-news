@@ -4,7 +4,6 @@ const {
   getArticlesById,
   getAllArticles,
   patchByArticleId,
-  getArticlesByTopic,
 } = require("./controllers/articles.controller");
 const {
   getCommentsByArticleId,
@@ -47,7 +46,4 @@ app.all("*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
 });
 
-app.use((err, req, res, next) => {
-  res.status(500).send({ msg: "Internal Server Error" });
-});
 module.exports = app;
