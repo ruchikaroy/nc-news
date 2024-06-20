@@ -61,7 +61,7 @@ exports.fetchAllArticles = ({ topic, sort_by, direction }) => {
   if (sort_by) {
     let sort_by_criteria;
     if (sort_by === "comment_count") {
-      sort_by_criteria = "articles.comment_count";
+      sort_by_criteria = "comment_count";
     } else if (sort_by === "created_at") {
       sort_by_criteria = "articles.created_at";
     } else if (sort_by === "votes") {

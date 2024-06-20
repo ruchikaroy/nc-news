@@ -83,13 +83,22 @@ describe("GET/api/articles", () => {
           expect(response.status).toBe(404);
         });
     });
-    test("GET:200 should responds with an array of article objects arranged in descending order", () => {
+    test("GET:200 should responds with an array of article objects sorted by created_at arranged in descending order", () => {
       return request(app)
         .get("/api/articles?sort_by=created_at&direction=DESC")
         .expect(200)
         .then(({ body }) => {
           const { articles } = body;
           expect(articles).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+    test("GET:200 should responds with an array of article objects sorted by comment_count arranged in descending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comment_count&direction=DESC")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).toBeSortedBy("comment_count", { descending: true });
         });
     });
   });
