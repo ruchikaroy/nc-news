@@ -36,7 +36,7 @@ GROUP BY
     .catch();
 };
 
-exports.fetchAllArticles = (topic) => {
+exports.fetchAllArticles = ({ topic, sort_by, direction }) => {
   let queryValues = [];
 
   let sqlQuery = ` SELECT
@@ -55,8 +55,27 @@ exports.fetchAllArticles = (topic) => {
     sqlQuery += ` WHERE articles.topic = $1`;
     queryValues.push(topic);
   }
-  sqlQuery += ` GROUP BY articles.article_id
-  ORDER BY articles.created_at DESC`;
+
+  sqlQuery += ` GROUP BY articles.article_id`;
+
+  if (sort_by) {
+    let sort_by_criteria;
+    if (sort_by === "comment_count") {
+      sort_by_criteria = "articles.comment_count";
+    } else if (sort_by === "created_at") {
+      sort_by_criteria = "articles.created_at";
+    } else if (sort_by === "votes") {
+      sort_by_criteria = "articles.votes";
+    }
+
+    sqlQuery += ` ORDER BY ${sort_by_criteria}`;
+  }
+
+  if (direction) {
+    sqlQuery += ` ${direction}`;
+  }
+
+  console.log(sqlQuery);
 
   return db.query(sqlQuery, queryValues).then(({ rows }) => {
     return rows;
