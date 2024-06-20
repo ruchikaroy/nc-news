@@ -85,7 +85,7 @@ describe("GET/api/articles", () => {
     });
     test("GET:200 should responds with an array of article objects arranged in descending order", () => {
       return request(app)
-        .get("/api/articles")
+        .get("/api/articles?sort_by=created_at&direction=DESC")
         .expect(200)
         .then(({ body }) => {
           const { articles } = body;
